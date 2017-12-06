@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="jsnetworkx.js"></script>
+<script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+<script src="https://d3js.org/d3-selection.v1.min.js"></script>
+<script src="https://d3js.org/d3-drag.v1.min.js"></script>
+
+
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+
+<script src="https://d3js.org/d3-ease.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+
+<script src="https://d3js.org/d3-timer.v1.min.js"></script>
+<script src="https://d3js.org/d3-transition.v1.min.js"></script>
+<script src="https://d3js.org/d3-force.v1.min.js"></script>
+
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script src="js/reactomejs.js"></script>
+<script src="js/reactomejsquiz.js"></script>
+
+<script src="js/app.js"></script>
+<style>
+
+.link {
+  stroke: #aaa;
+  stroke-width:1;
+}
+
+.active {
+    stroke: #000;
+    stroke-width: 2px;
+}
+circle {
+    fill:blue;
+}
+
+.node text {
+stroke:#333;
+cursos:pointer;
+}
+
+.noderect {
+    stroke:#000;
+    stroke-width:1px;
+}
+.node circle{
+stroke:#fff;
+stroke-width:3px;
+fill:#555;
+}
+
+svg {
+  background-color: #FFF;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#svg_viewer {
+ border-style:solid;
+ border-color:#aaa;
+ border-width:1px;
+ margin:2px;
+}
+#nxcanvas, #nxcanvas,#nxviewer{
+    width:100%;
+    height:100vh;
+}
+#quiz_status, #pathway, #viewer, #nxviewer{
+    float:left;
+}
+#menubar{
+    background-color: rgb(88, 195, 229);
+}
+body {
+
+}
+</style>
+
+</head>
+<body>
+<div id="menubar"><span>View Mode</span>
+    <select id="viewmode">
+        <option value="reaction">Reaction</option>        
+        <option value="quiz">Quiz</option>
+        <option value="animation">Animation</option>                
+        <option value="pathway">Pathway</option>
+        <option value="reaction2">Old Reaction</option>                        
+    </select></div>
+<ul id="pathways" style="float:left;"></ul>
+<div id="pathway">
+    <h2><span id="pathwaytitle"></span></h2>
+    <span id="pathwayurl"></span>
+<ul id="reactions"></ul>
+</div>
+<div id="viewer"><svg id="svg_viewer"></svg></div>
+<div id="nxviewer" ><svg id="nxcanvas"></svg></div>
+</body>
+</html>
