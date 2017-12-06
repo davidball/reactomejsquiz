@@ -10,8 +10,8 @@ var idFunctionizeNode = function(node) {
 var rjs = {
     G:new jsnx.DiGraph(),
     urls: {
-        pathwayList:"http://reactome.org/ContentService/data/pathways/top/Homo+sapiens",
-        generalQuery:"http://reactome.org/ContentService/data/query/"
+        pathwayList:"https://reactome.org/ContentService/data/pathways/top/Homo+sapiens",
+        generalQuery:"https://reactome.org/ContentService/data/query/"
     },
     getPathwayList: function(onSuccess){
         var pathwaylist = jQuery.get({"url":this.urls.pathwayList,success:onSuccess});
