@@ -156,28 +156,21 @@ var app = {"sample_pathways":{"R-HSA-69541":"Stabilization of p53"}, "all_nodes"
 //                .attr("width", width)
  //               .attr("height", height);
                  $('#pathways').hide()
+
                 refreshDisplay(resp);
                 
             }
             rjs.getReaction(reaction_id, onLoadReaction);
-//            jQuery.get({url:"http://reactome.org/ContentService/data/query/" + reaction_id,success:onLoadReaction});
+
         })
         
-    //    var pathway_div = $("#pathway");
-  //      pathway_div.attr("id","div"+pathway_id);
-//        pathway_div.addClass('pathway');
-//        pathway_div.append(pathway_title);
- //       pathway_div.append(reaction_list);
-  //      var reaction_div = $("<div/>");
-//        reaction_div.addClass("reaction");
- //       pathway_div.append(reaction_div);
-  //      $('body').append(pathway_div);
         
         window.lastPathway = resp;
     }
     
     
     var refreshDisplay = function(resp) {
+        $('#viewer').show();
         if (!resp) {
             resp = app.lastDisplay
         } 
@@ -211,9 +204,7 @@ var app = {"sample_pathways":{"R-HSA-69541":"Stabilization of p53"}, "all_nodes"
         clearCanvas();
         rjs.draw('#svg_viewer');
     }
-//var pathway = jQuery.get({url:"hhttp://reactome.org/ContentService/data/query/R-HSA-1236975",success:renderReaction});
 
-//var pathway = jQuery.get({url:"http://reactome.org/ContentService/data/pathway/141409/containedEvents",success:renderReaction});
 var width = 900,
 height = 600;
 
@@ -472,15 +463,16 @@ svg.append("svg:defs").append("svg:marker")
      
      d3.selectAll('text').transition(t).attr('y',meetingY).attr('x', meetingX).remove()
      d3.selectAll('circle').transition(t).attr('cy',meetingY).attr('cx', meetingX).remove().on('end', function() {
-         console.log("hey i ended!!!")
+
          var n_outputs = reaction.output.length
          var width_per = w/(n_outputs+1)
          var c = svg.selectAll('g .outputnode').data(reaction.output);
 
-         var outputLeft = meetingX - 30
+         var outputLeft = meetingX - 30;
+         
          for (var i=0;i<n_outputs;i++) {
              reaction.output[i].left = outputLeft;
-             reaction.output[i].top = meetingY;
+             reaction.output[i].top = meetingY + (i%2) *15 ;
              outputLeft += 60
          }
 
@@ -489,8 +481,7 @@ svg.append("svg:defs").append("svg:marker")
          output_gs.each(function(g){
              reactantNode(d3.select(this),g)
          })
-         
-         
+                  
          var ttext = d3.transition()
          .duration(2000)
          .ease(d3.easeLinear);
@@ -500,146 +491,13 @@ svg.append("svg:defs").append("svg:marker")
      
          txt.transition(ttext).style("font-size",64).attr('x',meetingX/2).attr('y',0).remove()
          
-     });
-     
-
-     
-     
-         function dragstarted(d) {
-                        console.log('dstart1')
-           d3.select(this).raise().classed("active", true);
-           console.log('dstart2')
-         }
-
-         function dragged(d) {
-           d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-                      d3.select(this.parentNode).selectAll('text').attr("x", d.x = d3.event.x).attr("y", d.y = d3.event.y);
-                      window.ddd = d;
-//              d3.select(this.parentNode).attr("transform", "translate(" + d3.event.x+","+d3.event.y+")");
-         }
-
-         function dragended(d) {
-             console.log(d)
-             window.ddd = d;
-             var neighbor_map = Array.from(rjs.G.get(d));
-             var neighbors = []
-             
-             neighbor_map.forEach(function(a,b){neighbors.push(a[0])})
-             
-             console.log(neighbors)
-             window.neighbors = neighbors
-             var reactions = neighbors.filter(x => x.className == 'Reaction')
-             var peer_inputs = reactions.map(x=> x.input).reduce(function(a, b) {return a.concat(b);}).filter(x=> x != d);
-             
-             $.each(peer_inputs, function(i,n) {
-                 var domid = "#" + n.stId
-                 var potential_match = svg.select(domid);
-                 window.potential_match = potential_match
-                 
-                 var target_x = parseInt(potential_match.attr('cx'));
-                 var target_y = parseInt(potential_match.attr('cy'));
-                 
-                 var distsq = (d3.event.x - target_x )**2 + (d3.event.y - target_y)**2;
-                 if (distsq < 36) {
-                     console.log("match")
-                     var reaction = reactions[0];//hack not necessarily THAT reaction
-                     alert('Reaction! ' + reaction.displayName); 
-                     
-                     
-                     var n_outputs = reaction.output.length
-                     var width_per = w/(n_outputs+1)
-                     var c = svg.selectAll('g .outputnode').data(reaction.output);
-     
-                     for (var i=0;i<n_outputs;i++) {
-                         reaction.output[i].left = width_per * (i+1);
-                         reaction.output[i].top = 300
-                     }
-     
-                     var c = svg.selectAll('g .outputnode').data(reaction.output);
-                     var output_gs = c.enter().append('g')
-                     output_gs.each(function(g){
-                         reactantNode(d3.select(this),g)
-                     })
-                     
-                 } else {
-                     console.log("you missed")
-                 }
-                 
-             })
-             console.log("peer_inputs")
-             console.log(peer_inputs)
-           d3.select(this).classed("active", false);
-         }
-         
-         
-     svg.selectAll("circle")
-         .call(d3.drag()
-             .on("start", dragstarted)
-             .on("drag", dragged)
-             .on("end", dragended));
-
-    /*
-    
-     var b = svg.selectAll('rect').data([reaction])
-     
-     
-     b.enter().append("rect").attr('x',w/2).attr('y',150).attr('width',30).attr('height',10).attr('id',function(d){return d.toString()});
-
-
-     var n_outputs = reaction.output.length
-     var width_per = w/(n_outputs+1)
-     var c = svg.selectAll('g .outputnode').data(reaction.output);
-     
-     for (var i=0;i<n_outputs;i++) {
-         reaction.output[i].left = width_per * (i+1);
-         reaction.output[i].top = 300
-     }
-     
-     var c = svg.selectAll('g .outputnode').data(reaction.output);
-     var output_gs = c.enter().append('g')
-     output_gs.each(function(g){
-         reactantNode(d3.select(this),g)
-     }) */
-     /*
-     c.enter().append("circle").attr('r',12).attr('cx',function(d) {return d.left})
-         .attr('cy',300).attr('id',function(d){return d.toString()}).style("fill", function(d, i) { return color(i); });
-    */
-     
-     /*
-     var inputlinkData = reaction.input.map(x => [x,reaction])
-     var outputLinkData = reaction.output.map(x=> [reaction,x]);
-     
-     var links= svg.selectAll(".link .inputlink").data(inputlinkData);
-     
-     links.enter()
-         .append('line')
-             .attr('x1',function(d){return $('#' + d[0].toString()).attr('cx')})
-             .attr('y1',function(d){return $('#' + d[0].toString()).attr('cy')})
-             .attr('x2',function(d){return $('#' + d[1].toString()).attr('x')})
-             .attr('y2',function(d){return $('#' + d[1].toString()).attr('y')})
-             .classed("link",true)
-             .style('marker-end','url(#end-arrow)');
-     
-      var links= svg.selectAll(".link .outputlink").data(outputLinkData);
-     
-             links.enter()
-                  .append('line')     
-                  .attr('x1',function(d){return $('#' + d[0].toString()).attr('x')})
-                  .attr('y1',function(d){return $('#' + d[0].toString()).attr('y')})
-                  .attr('x2',function(d){return $('#' + d[1].toString()).attr('cx')})
-                  .attr('y2',function(d){return $('#' + d[1].toString()).attr('cy')})
-              .classed("link",true)
-              .style('marker-end','url(#end-arrow)').append('text').text("heyeverybody");
-    */
-
+     });     
  }
  
  
  var renderNetworkManual = function() {
-             var reactions = rjs.reactions()
-     
-     
-     
+    var reactions = rjs.reactions()
+
  }
     var doGraph = function(nodesAndLinks) {
         
